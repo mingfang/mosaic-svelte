@@ -61,21 +61,13 @@
 <div class="layout">
     <h1 style="grid-area: title">Mosaic Stocks</h1>
 
-    <div style="grid-area: menu">
-        <Mosaic el={menu}></Mosaic>
-    </div>
+    <Mosaic style="grid-area: menu" el={menu}></Mosaic>
 
-    <div style="grid-area: chart">
-        <Mosaic el={chart}></Mosaic>
-    </div>
+    <Mosaic style="grid-area: chart" el={chart}></Mosaic>
 
-    <div style="grid-area: spec; background: lightgray">
-        <Mosaic el={spec}></Mosaic>
-    </div>
+    <Mosaic style="grid-area: spec; background: lightgray" el={spec}></Mosaic>
 
-    <div style="grid-area: table; position: relative">
-        <Mosaic el={table}></Mosaic>
-    </div>
+    <Mosaic style="grid-area: table; position: relative" el={table}></Mosaic>
 </div>
 
 <style>

@@ -13,5 +13,5 @@
 </script>
 
 {#key el}
-    <div style="display: contents" use:plot={{el}}></div>
+    <div {...$$restProps} use:plot={{el}}></div>
 {/key}
