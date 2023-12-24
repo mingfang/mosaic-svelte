@@ -3,20 +3,21 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "vite dev --host 0.0.0.0 --port 3000",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^3.0.0",
-		"@sveltejs/kit": "^2.0.0",
-		"@sveltejs/vite-plugin-svelte": "^3.0.0",
-		"svelte": "^4.2.7",
-		"svelte-check": "^3.6.0",
-		"typescript": "^5.0.0",
-		"vite": "^5.0.3"
+		"@sveltejs/adapter-auto": "^3.0.1",
+		"@sveltejs/kit": "^2.0.6",
+		"@sveltejs/vite-plugin-svelte": "^3.0.1",
+		"@uwdata/vgplot": "^0.3.4",
+		"svelte": "^4.2.8",
+		"svelte-check": "^3.6.2",
+		"typescript": "^5.3.3",
+		"vite": "^5.0.10"
 	},
 	"type": "module"
 }
