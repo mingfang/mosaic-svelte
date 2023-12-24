@@ -1,6 +1,6 @@
 <script>
     import * as vg from "@uwdata/vgplot"
-    import Mosiac from "./Mosiac.svelte"
+    import Mosaic from "./Mosiac.svelte"
 
     let chart, table, menu, spec
 
@@ -65,19 +65,19 @@
     <h1 style="grid-area: title">Mosaic Stocks</h1>
 
     <div style="grid-area: menu">
-        <Mosiac target={menu}></Mosiac>
+        <Mosaic target={menu}></Mosaic>
     </div>
 
     <div style="grid-area: chart">
-        <Mosiac target={chart}></Mosiac>
+        <Mosaic target={chart}></Mosaic>
     </div>
 
     <div style="grid-area: spec; background: lightgray">
-        <Mosiac target={spec}></Mosiac>
+        <Mosaic target={spec}></Mosaic>
     </div>
 
     <div style="grid-area: table; position: relative">
-        <Mosiac target={table}></Mosiac>
+        <Mosaic target={table}></Mosaic>
     </div>
 </div>
 
