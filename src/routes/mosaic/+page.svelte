@@ -1,6 +1,6 @@
 <script>
     import * as vg from "@uwdata/vgplot"
-    import Mosaic from "./Mosiac.svelte"
+    import Mosaic from "./Mosaic.svelte"
 
     let chart, table, menu, spec
 
