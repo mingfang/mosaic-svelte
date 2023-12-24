@@ -6,13 +6,13 @@
 
     /* init */
     (async () => {
-        // configure the coordinator to use DuckDB-WASM
         // creates a new database instance running in-browser
         const wasm = await vg.wasmConnector()
+        // configure the coordinator to use DuckDB-WASM
         vg.coordinator().databaseConnector(wasm)
 
         /* load stocks file */
-        vg.coordinator().exec(vg.loadCSV("stocks", `${window.location.protocol}///${window.location.host}/stocks.csv`))
+        vg.coordinator().exec(vg.loadCSV("stocks", `${window.location.protocol}//${window.location.host}/stocks.csv`))
 
         const $brush = vg.Selection.crossfilter()
 
@@ -44,7 +44,7 @@
                     mark: 'gridY',
                 },
             ]
-        };
+        }
         spec = await vg.parseSpec(
             json,
             {
@@ -55,29 +55,26 @@
         )
 
         table = vg.table({from: "stocks", filterBy: $brush, height: 250})
-
     })()
-
 </script>
 
 <div class="layout">
-
     <h1 style="grid-area: title">Mosaic Stocks</h1>
 
     <div style="grid-area: menu">
-        <Mosaic target={menu}></Mosaic>
+        <Mosaic el={menu}></Mosaic>
     </div>
 
     <div style="grid-area: chart">
-        <Mosaic target={chart}></Mosaic>
+        <Mosaic el={chart}></Mosaic>
     </div>
 
     <div style="grid-area: spec; background: lightgray">
-        <Mosaic target={spec}></Mosaic>
+        <Mosaic el={spec}></Mosaic>
     </div>
 
     <div style="grid-area: table; position: relative">
-        <Mosaic target={table}></Mosaic>
+        <Mosaic el={table}></Mosaic>
     </div>
 </div>
 
@@ -108,5 +105,4 @@
     :global(label){
         padding-right: 4px;
     }
-
 </style>

@@ -1,17 +1,17 @@
+<!-- Normally this component lives in the $lib directory. Kept here for simplicity. -->
 <script>
-    export let target
+    export let el
 
     /** @type {import('svelte/action').Action}  */
-    export function plot(node, {el}) {
-        if (el) {
-            node.replaceChildren(el)
+    export function plot(node, param) {
+        if (param.el) {
+            node.replaceChildren(param.el)
         } else {
             node.replaceChildren('Loading...')
         }
     }
-
 </script>
 
-{#key target}
-    <div style="display: contents" use:plot={{el: target}}></div>
+{#key el}
+    <div style="display: contents" use:plot={{el}}></div>
 {/key}
