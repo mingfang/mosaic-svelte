@@ -97,8 +97,6 @@
 
     :global(table) {
         width: 100%;
-        padding-left: 1em;
-        padding-right: 1em;
     }
 
     :global(th) {
