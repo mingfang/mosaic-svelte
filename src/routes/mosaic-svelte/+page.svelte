@@ -2,7 +2,7 @@
     import * as vg from '@uwdata/vgplot'
     import {Element, Menu, Table} from '$lib'
 
-    let chart, table, menu, spec
+    let chart, spec
     let brush
 
     async function init() {
@@ -15,7 +15,6 @@
         vg.coordinator().exec(vg.loadCSV("stocks", `${window.location.protocol}//${window.location.host}/stocks.csv`))
 
         brush = vg.Selection.crossfilter()
-
 
         chart = vg.plot([
             vg.line(vg.from("stocks", {filterBy: brush}), {x: "Date", y: "Close"}),
@@ -59,7 +58,7 @@
 
 
 <div class="layout">
-    <h1 style="grid-area: title">Mosaic Stocks</h1>
+    <h1 style="grid-area: title">Mosaic Stocks: Svelte Components</h1>
 
     {#await ready}
         <p>Connecting...</p>
@@ -76,7 +75,7 @@
                    rowNumber={true}
             />
         </div>
-        <!-- same table using sql -->
+        <!-- similar table using sql -->
         <div style="grid-area: sql">
             <Table sql="select Symbol, Open, Close, Volume from stocks order by date limit 10"
                    filterBy={brush}
