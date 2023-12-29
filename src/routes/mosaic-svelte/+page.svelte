@@ -1,6 +1,6 @@
 <script>
     import * as vg from '@uwdata/vgplot'
-    import {Element} from '$lib'
+    import {Element, Menu, Table} from '$lib'
 
     let chart, table, menu, spec
     let brush
@@ -16,7 +16,6 @@
 
         brush = vg.Selection.crossfilter()
 
-        menu = vg.menu({from: "stocks", column: "symbol", label: "Symbol", value: 'AAPL', as: brush})
 
         chart = vg.plot([
             vg.line(vg.from("stocks", {filterBy: brush}), {x: "Date", y: "Close"}),
@@ -53,12 +52,11 @@
                 ]
             }
         )
-
-        table = vg.table({from: "stocks", filterBy: brush, height: 250})
     }
 
     const ready = init()
 </script>
+
 
 <div class="layout">
     <h1 style="grid-area: title">Mosaic Stocks</h1>
@@ -66,10 +64,26 @@
     {#await ready}
         <p>Connecting...</p>
     {:then _}
-        <Element style="grid-area: menu" el={menu}></Element>
+        <div style="grid-area: menu">
+            <Menu from="stocks" column="Symbol" value="AAPL" as={brush}/>
+        </div>
         <Element style="grid-area: chart" el={chart}></Element>
         <Element style="grid-area: spec; background: lightgray" el={spec}></Element>
-        <Element style="grid-area: table; position: relative" el={table}></Element>
+        <div style="grid-area: table">
+            <Table from="stocks" columns={['*']} limit={10} offset={0}
+                   filterBy={brush}
+                   paginate={true}
+                   rowNumber={true}
+            />
+        </div>
+        <!-- same table using sql -->
+        <div style="grid-area: sql">
+            <Table sql="select Symbol, Open, Close, Volume from stocks order by date limit 10"
+                   filterBy={brush}
+                   paginate={true}
+                   rowNumber={true}
+            />
+        </div>
     {/await}
 </div>
 
@@ -80,7 +94,8 @@
             "title title"
             "menu menu"
             "chart spec"
-            "table table";
+            "table table"
+            "sql sql";
         grid-gap: 1em;
         padding: 1em;
     }

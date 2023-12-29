@@ -1,4 +1,3 @@
-<!-- Normally this component lives in the $lib directory. Kept here for simplicity. -->
 <script>
     export let el
 

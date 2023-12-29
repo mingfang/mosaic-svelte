@@ -1,23 +1,44 @@
 {
 	"name": "mosiac-svelte",
 	"version": "0.0.1",
-	"private": true,
+	"author": {
+		"name": "Ming Fang"
+	},
+	"license": "MIT",
+	"files": [
+		"dist"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"svelte": "./dist/index.js"
+		}
+	},
+	"main": "dist/index.js",
 	"scripts": {
 		"dev": "vite dev --host 0.0.0.0 --port 3000",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
+		"package": "svelte-package"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.1",
 		"@sveltejs/kit": "^2.0.6",
+		"@sveltejs/package": "^2.2.5",
 		"@sveltejs/vite-plugin-svelte": "^3.0.1",
-		"@uwdata/vgplot": "^0.3.4",
+		"@uwdata/mosaic-core": "^0.3.5",
+		"@uwdata/mosaic-sql": "^0.3.5",
+		"@uwdata/vgplot": "^0.3.5",
+		"js-sql-parser": "^1.5.0",
 		"svelte": "^4.2.8",
 		"svelte-check": "^3.6.2",
 		"typescript": "^5.3.3",
 		"vite": "^5.0.10"
+	},
+	"peerDependencies": {
+		"svelte": "^4.2.8"
 	},
 	"type": "module"
 }
