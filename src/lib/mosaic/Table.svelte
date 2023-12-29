@@ -1,11 +1,11 @@
 <script>
     import MosaicClient from './MosaicClient.svelte'
-    import {formatDate, formatLocaleAuto, formatLocaleNumber} from './format.js';
+    import {formatDate, formatLocaleAuto, formatLocaleNumber} from './util/format.js'
 
     export let paginate = false
     export let rowNumber = false
 
-    let formats
+    let formats, aligns;
 
     function formatof(base = {}, schema, locale) {
         if (!formats) {
@@ -26,8 +26,6 @@
         }
         return formats
     }
-
-    let aligns
 
     function alignof(base = {}, schema) {
         if (!aligns) {

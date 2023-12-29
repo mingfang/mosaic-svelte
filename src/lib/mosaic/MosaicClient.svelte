@@ -1,8 +1,8 @@
 <script>
     import {coordinator, isParam, isSelection, MosaicClient} from '@uwdata/mosaic-core'
-    import {column, eq, literal, Query} from '@uwdata/mosaic-sql';
-    import {onMount} from "svelte";
-    import {parseSql} from "./sql-parser.js";
+    import {column, eq, literal, Query} from '@uwdata/mosaic-sql'
+    import {parseSql} from "./util/sql-parser.js"
+    import {onMount} from "svelte"
 
     export let value = undefined
 
@@ -10,6 +10,9 @@
     $: if (value && me) {
         me.publishSelection(value)
     }
+
+    /* trigger repaint */
+    let updateTime
 
     class Me extends MosaicClient {
         constructor({
@@ -24,21 +27,21 @@
                         as,
                         filterBy,
                     } = {}) {
-            super(filterBy);
-            this.selection = as;
+            super(filterBy)
+            this.selection = as
 
             if (sql) {
                 const parsed = parseSql(sql)
-                this.from = parsed.from;
-                this.columns = parsed.columns;
+                this.from = parsed.from
+                this.columns = parsed.columns
                 this.orderBy = parsed.orderBy
                 //this.desc = desc //todo
                 this.limit = parsed.limit
                 this.offset = parsed.offset
                 this.distinct = parsed.distinct
             } else {
-                this.from = from;
-                this.columns = columns;
+                this.from = from
+                this.columns = columns
                 this.orderBy = orderBy
                 this.desc = desc
                 this.limit = +limit
@@ -48,8 +51,7 @@
         }
 
         publishSelection(value) {
-            // console.log('publishSelection value=', value)
-            const {selection, columns} = this;
+            const {selection, columns} = this
             if(!selection) return
             if (isSelection(selection)) {
                 selection.update({
@@ -57,40 +59,36 @@
                     schema: {type: 'point'},
                     value,
                     predicate: value ? eq(columns[0], literal(value)) : null
-                });
+                })
             } else if (isParam(selection)) {
-                selection.update(value);
+                selection.update(value)
             }
         }
 
         requestData(offset = 0) {
-            // console.log('requestData offset=', offset)
-            this.offset = offset >= 0 ? offset : 0;
+            this.offset = offset >= 0 ? offset : 0
 
             // request next data batch
-            const query = this.query(this.filterBy?.predicate(this));
-            this.requestQuery(query);
+            const query = this.query(this.filterBy?.predicate(this))
+            this.requestQuery(query)
 
             // prefetch subsequent data batch
-            coordinator().prefetch(query.clone().offset(offset + this.limit));
+            coordinator().prefetch(query.clone().offset(offset + this.limit))
         }
 
         /* inherited */
 
         fields() {
-            // console.log('fields', this.columns.map(name => column(this.from, name)))
-            return this.columns.map(name => column(this.from, name));
+            return this.columns.map(name => column(this.from, name))
         }
 
         fieldInfo(info) {
-            // console.log('fieldInfo', info)
-            this.schema = info;
-            return this;
+            this.schema = info
+            return this
         }
 
         query(filter = []) {
-            // console.log('query', filter)
-            const {from, schema, distinct, orderBy, limit, offset} = this;
+            const {from, schema, distinct, orderBy, limit, offset} = this
             return Query
                 .from(from)
                 .select(schema.map(s => s.column))
@@ -103,26 +101,22 @@
 
         queryResult(data) {
             // console.log('queryResult', data)
-            this.data = data;
-            return this;
+            this.data = data
+            return this
         }
 
         update() {
             const {data, limit} = this
             this.hasMore = data.numRows <= limit
             updateTime = Date.now()
-            // console.log('update', 'rows', data.numRows, 'hasMore', this.hasMore, 'offset', this.offset, 'limit', limit)
-            return this;
+            return this
         }
     }
 
-    /* trigger repaint */
-    let updateTime;
-
-    let me;
+    let me
     onMount(async () => {
         me = new Me($$restProps)
-        await coordinator().connect(me);
+        await coordinator().connect(me)
         return () => coordinator().disconnect(me)
     })
 </script>
