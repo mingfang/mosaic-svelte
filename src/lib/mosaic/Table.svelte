@@ -3,28 +3,9 @@
 
     export let paginate = false
     export let rowNumber = false
-
-    let prevScrollTop = -1;
-
-    async function scroll(e, client) {
-        console.log('scroll')
-        const {pending, loaded} = client;
-        const {scrollHeight, scrollTop, clientHeight} = e.target;
-        const back = scrollTop < prevScrollTop;
-        prevScrollTop = scrollTop;
-        console.log('scroll', 'back', back, 'pending', pending, 'loaded', loaded)
-        // if (back || pending || loaded) return;
-        if (scrollHeight - scrollTop < 2 * clientHeight) {
-            client.pending = true;
-            client.requestData(client.offset + client.limit);
-        }
-    }
 </script>
 
 <MosaicClient {...$$restProps} let:client>
-    <!--
-        on:scroll|passive={async (e)=> scroll(e, client)}
-    -->
     <table>
         <thead>
         {#if rowNumber}
@@ -47,6 +28,7 @@
         {/each}
         </tbody>
     </table>
+
     {#if paginate}
         <div class="paginate">
             <a on:click={()=> client.requestData(0)}>First</a>
