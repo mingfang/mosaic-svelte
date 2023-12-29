@@ -1,5 +1,5 @@
 <script>
-    import MosaicClient from '$lib/mosaic/MosaicClient.svelte'
+    import MosaicClient from './MosaicClient.svelte'
 
     export let paginate = false
     export let rowNumber = false
