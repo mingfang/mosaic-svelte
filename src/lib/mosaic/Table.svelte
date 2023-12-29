@@ -1,8 +1,50 @@
 <script>
     import MosaicClient from './MosaicClient.svelte'
+    import {formatDate, formatLocaleAuto, formatLocaleNumber} from './format.js';
 
     export let paginate = false
     export let rowNumber = false
+
+    let formats
+
+    function formatof(base = {}, schema, locale) {
+        if (!formats) {
+            formats = schema.map(({column, type}) => {
+                if (column in base) {
+                    return base[column];
+                } else {
+                    switch (type) {
+                        case 'number':
+                            return formatLocaleNumber(locale);
+                        case 'date':
+                            return formatDate;
+                        default:
+                            return formatLocaleAuto(locale);
+                    }
+                }
+            });
+        }
+        return formats
+    }
+
+    let aligns
+
+    function alignof(base = {}, schema) {
+        if (!aligns) {
+            aligns = schema.map(({column, type}) => {
+                if (column in base) {
+                    return base[column];
+                } else if (type === 'number') {
+                    return 'right';
+                } else if (type === 'date') {
+                    return 'right';
+                } else {
+                    return 'left';
+                }
+            });
+        }
+        return aligns
+    }
 </script>
 
 <MosaicClient {...$$restProps} let:client>
@@ -22,7 +64,11 @@
                     <td>{i + 1 + client.offset}</td>
                 {/if}
                 {#each client.schema as schema,i(i)}
-                    <td>{row[schema.column]}</td>
+                    {@const align = alignof({}, client.schema)[i]}
+                    {@const format = formatof({}, client.schema)[i]}
+                    <td style="text-align: {align}">
+                        {format(row[schema.column])}
+                    </td>
                 {/each}
             </tr>
         {/each}
@@ -33,7 +79,7 @@
         <div class="paginate">
             <a on:click={()=> client.requestData(0)}>First</a>
             <a on:click={()=> client.requestData(client.offset - client.limit)}>Prev</a>
-            <a on:click|preventDefault={()=> client.requestData(client.offset + client.limit)}>Next</a>
+            <a on:click={()=> client.requestData(client.offset + client.limit)}>Next</a>
         </div>
     {/if}
 </MosaicClient>
@@ -41,8 +87,13 @@
 <style>
     .paginate {
         display: grid;
-        grid-template-columns: auto auto 1fr;
-        grid-gap: 1em
+        grid-template-columns: repeat(3, minmax(min-content, max-content));
+        grid-gap: 1em;
+        margin-top: .5em;
+    }
+
+    .paginate a {
+        cursor: pointer;
     }
 </style>
 

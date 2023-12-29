@@ -77,7 +77,7 @@
         </div>
         <!-- similar table using sql -->
         <div style="grid-area: sql">
-            <Table sql="select Symbol, Open, Close, Volume from stocks order by date limit 10"
+            <Table sql="select Symbol, Date, Open, Close, Volume from stocks order by date limit 10"
                    filterBy={brush}
                    paginate={true}
                    rowNumber={true}
