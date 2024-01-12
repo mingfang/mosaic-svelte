@@ -1,4 +1,5 @@
 ## POC to integrate [Mosaic](https://uwdata.github.io/mosaic/) with Svelte.
+## [Live Demo](https://mosaic-svelte.rebelsoft.com/)
 
 ![](/screenshot.png?raw=true)
 
