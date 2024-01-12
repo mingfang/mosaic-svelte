@@ -1,15 +1,23 @@
 <script>
     import * as vg from '@uwdata/vgplot'
     import {Element, Menu, Table} from '$lib'
+    import { page } from '$app/stores';
+
+    const {ws} = $page.data
 
     let chart, spec
     let brush
 
     async function init() {
-        // creates a new database instance running in-browser
-        const wasm = await vg.wasmConnector()
-        // configure the coordinator to use DuckDB-WASM
-        vg.coordinator().databaseConnector(wasm)
+        if(ws) {
+            const socket = vg.socketConnector(`wss://${window.location.host}/duckdb-ws`)
+            vg.coordinator().databaseConnector(socket)
+        }else{
+            // creates a new database instance running in-browser
+            const wasm = await vg.wasmConnector()
+            // configure the coordinator to use DuckDB-WASM
+            vg.coordinator().databaseConnector(wasm)
+        }
 
         /* load stocks file */
         vg.coordinator().exec(vg.loadCSV("stocks", `${window.location.protocol}//${window.location.host}/stocks.csv`))
@@ -58,7 +66,7 @@
 
 
 <div class="layout">
-    <h1 style="grid-area: title">Mosaic Stocks: Svelte Components</h1>
+    <h1 style="grid-area: title">Mosaic Stocks: Svelte {ws||'WASM'}</h1>
 
     {#await ready}
         <p>Connecting...</p>

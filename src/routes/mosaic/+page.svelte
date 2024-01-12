@@ -61,7 +61,7 @@
 </script>
 
 <div class="layout">
-    <h1 style="grid-area: title">Mosaic Stocks</h1>
+    <h1 style="grid-area: title">Mosaic Stocks: Native WASM</h1>
 
     {#await ready}
         <p>Connecting...</p>
