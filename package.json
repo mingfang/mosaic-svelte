@@ -19,6 +19,7 @@
 		"dev": "concurrently npm:dev:*",
 		"dev:ui": "vite dev --host 0.0.0.0 --port 3000",
 		"dev:server": "npm run build && PORT=4000 nodemon server/server.js",
+		"start": "node server/server.js",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
