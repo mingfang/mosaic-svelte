@@ -1,3 +1,5 @@
+## POC to integrate [Mosaic](https://uwdata.github.io/mosaic/) with Svelte.
+
 ![](/screenshot.png?raw=true)
 
 ## Developing
