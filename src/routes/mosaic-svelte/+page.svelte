@@ -65,7 +65,7 @@
     }
 
     const ready = init()
-    let sqlText = "SELECT Symbol, Date, Open, Close, Volume FROM stocks ORDER BY date LIMIT 10"
+    let sqlText = "SELECT Symbol, Date, Open, Close, Volume\n FROM stocks\n ORDER BY date\n LIMIT 10"
 </script>
 
 
@@ -99,6 +99,7 @@
             <button on:click={()=> sqlText = $cmInstance.value}>Run</button>
             {#key sqlText}
                 <Table sql={sqlText}
+                       filterBy={brush}
                        paginate={true}
                        rowNumber={true}
                 />
@@ -119,7 +120,9 @@
         grid-gap: 1em;
         padding: 1em;
     }
-
+    button {
+        margin: 0.5em;
+    }
     /* hacky styles; don't do this in real life */
 
     :global(table) {
