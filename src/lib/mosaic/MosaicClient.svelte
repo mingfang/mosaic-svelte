@@ -29,30 +29,34 @@
                     } = {}) {
             super(filterBy)
             this.selection = as
+            this.limit = +limit
+            this.offset = +offset
 
             if (sql) {
-                const parsed = parseSql(sql)
-                this.from = parsed.from
-                this.columns = parsed.columns
-                this.orderBy = parsed.orderBy
-                //this.desc = desc //todo
-                this.limit = parsed.limit
-                this.offset = parsed.offset
-                this.distinct = parsed.distinct
+                this.updateSql(sql);
             } else {
                 this.from = from
                 this.columns = columns
                 this.orderBy = orderBy
                 this.desc = desc
-                this.limit = +limit
-                this.offset = +offset
                 this.distinct = distinct
             }
         }
 
+        updateSql(sql) {
+            this.sql = sql
+            const parsed = parseSql(sql)
+            this.from = parsed.from
+            this.columns = parsed.columns
+            this.orderBy = parsed.orderBy
+            this.limit = parsed.limit || this.limit
+            this.offset = parsed.offset || this.offset
+            this.distinct = parsed.distinct
+        }
+
         publishSelection(value) {
             const {selection, columns} = this
-            if(!selection) return
+            if (!selection) return
             if (isSelection(selection)) {
                 selection.update({
                     source: this,

@@ -1,18 +1,21 @@
 <script>
     import * as vg from '@uwdata/vgplot'
     import {Element, Menu, Table} from '$lib'
-    import { page } from '$app/stores';
+    import {page} from '$app/stores';
+    import {codemirror, withCodemirrorInstance} from '@neocodemirror/svelte'
+    import {sql} from '@codemirror/lang-sql'
 
     const {ws} = $page.data
 
     let chart, spec
     let brush
+    const cmInstance = withCodemirrorInstance()
 
     async function init() {
-        if(ws) {
+        if (ws) {
             const socket = vg.socketConnector(`wss://${window.location.host}/duckdb-ws`)
             vg.coordinator().databaseConnector(socket)
-        }else{
+        } else {
             // creates a new database instance running in-browser
             const wasm = await vg.wasmConnector()
             // configure the coordinator to use DuckDB-WASM
@@ -62,11 +65,12 @@
     }
 
     const ready = init()
+    let sqlText = "SELECT Symbol, Date, Open, Close, Volume FROM stocks ORDER BY date LIMIT 10"
 </script>
 
 
 <div class="layout">
-    <h1 style="grid-area: title">Mosaic Stocks: Svelte {ws||'WASM'}</h1>
+    <h1 style="grid-area: title">Mosaic Stocks: Svelte {ws || 'WASM'}</h1>
 
     {#await ready}
         <p>Connecting...</p>
@@ -85,11 +89,20 @@
         </div>
         <!-- similar table using sql -->
         <div style="grid-area: sql">
-            <Table sql="select Symbol, Date, Open, Close, Volume from stocks order by date limit 10"
-                   filterBy={brush}
-                   paginate={true}
-                   rowNumber={true}
-            />
+            <h4>Edit and run the SQL below</h4>
+            <div use:codemirror={{
+                value: sqlText,
+                lang: sql(),
+                setup: "basic",
+                instanceStore: cmInstance
+            }}/>
+            <button on:click={()=> sqlText = $cmInstance.value}>Run</button>
+            {#key sqlText}
+                <Table sql={sqlText}
+                       paginate={true}
+                       rowNumber={true}
+                />
+            {/key}
         </div>
     {/await}
 </div>
