@@ -17,7 +17,7 @@ export const formatLocaleAuto = localize(locale => {
 });
 
 export const formatLocaleNumber = localize(locale => {
-    return value => value === 0 ? '0' : value.toLocaleString(locale); // handle negative zero
+    return value => value === 0 ? '0' : value?.toLocaleString(locale); // handle negative zero
 });
 
 export const formatAuto = formatLocaleAuto();

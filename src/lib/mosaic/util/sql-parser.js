@@ -8,7 +8,7 @@ export function parseSql(sql) {
     const distinct = ast.value.distinctOpt != null
     const columns = ast.value.selectItems.value.map(value => value.alias || value.value)
     const from = ast.value.from.value[0].value.value.value
-    const orderBy = ast.value.orderBy.value.map(value => {
+    const orderBy = ast.value.orderBy?.value.map(value => {
         if (value.sortOpt && 'desc' === value.sortOpt.toLowerCase()) {
             return desc(value.value.value)
         } else {

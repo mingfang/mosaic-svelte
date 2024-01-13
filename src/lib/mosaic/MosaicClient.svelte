@@ -12,7 +12,7 @@
     }
 
     /* trigger repaint */
-    let updateTime
+    let repaint = {}
 
     class Me extends MosaicClient {
         constructor({
@@ -112,7 +112,7 @@
         update() {
             const {data, limit} = this
             this.hasMore = data.numRows <= limit
-            updateTime = Date.now()
+            repaint = repaint
             return this
         }
     }
@@ -125,6 +125,6 @@
     })
 </script>
 
-{#key updateTime}
+{#key repaint}
     <slot client={me}></slot>
 {/key}

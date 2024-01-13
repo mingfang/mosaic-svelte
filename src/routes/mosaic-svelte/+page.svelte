@@ -65,7 +65,10 @@
     }
 
     const ready = init()
+
     let sqlText = "SELECT Symbol, Date, Open, Close, Volume\n FROM stocks\n ORDER BY date\n LIMIT 10"
+    let filterBy = true
+    $: repaint = {filterBy, sqlText}
 </script>
 
 
@@ -80,13 +83,15 @@
         </div>
         <Element style="grid-area: chart" el={chart}></Element>
         <Element style="grid-area: spec; background: lightgray" el={spec}></Element>
-        <div style="grid-area: table">
-            <Table from="stocks" columns={['*']} limit={10} offset={0}
-                   filterBy={brush}
-                   paginate={true}
-                   rowNumber={true}
-            />
-        </div>
+        <!--
+                <div style="grid-area: table">
+                    <Table from="stocks" columns={['*']} limit={10} offset={0}
+                           filterBy={brush}
+                           paginate={true}
+                           rowNumber={true}
+                    />
+                </div>
+        -->
         <!-- similar table using sql -->
         <div style="grid-area: sql">
             <h4>Edit and run the SQL below</h4>
@@ -97,9 +102,13 @@
                 instanceStore: cmInstance
             }}/>
             <button on:click={()=> sqlText = $cmInstance.value}>Run</button>
-            {#key sqlText}
+            <label>
+                <input type="checkbox" bind:checked={filterBy}/>
+                Filter By Symbol
+            </label>
+            {#key repaint}
                 <Table sql={sqlText}
-                       filterBy={brush}
+                       filterBy={filterBy ? brush : null}
                        paginate={true}
                        rowNumber={true}
                 />
@@ -120,9 +129,11 @@
         grid-gap: 1em;
         padding: 1em;
     }
+
     button {
         margin: 0.5em;
     }
+
     /* hacky styles; don't do this in real life */
 
     :global(table) {
