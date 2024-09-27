@@ -1,5 +1,6 @@
 <script>
     import * as vg from '@uwdata/vgplot'
+    import {astToDOM, parseSpec} from '@uwdata/mosaic-spec'
     import {Element, Menu, Table} from '$lib'
     import {page} from '$app/stores';
     import {codemirror, withCodemirrorInstance} from '@neocodemirror/svelte'
@@ -7,7 +8,7 @@
 
     const {ws} = $page.data
 
-    let chart, spec
+    let chart, element
     let brush
     const cmInstance = withCodemirrorInstance()
 
@@ -23,7 +24,8 @@
         }
 
         /* load stocks file */
-        vg.coordinator().exec(vg.loadCSV("stocks", `${window.location.protocol}//${window.location.host}/stocks.csv`))
+        const url = ws ? `http://localhost:3000/stocks.csv` : `${window.location.protocol}//${window.location.host}/stocks.csv`
+        vg.coordinator().exec(vg.loadCSV("stocks", url))
 
         brush = vg.Selection.crossfilter()
 
@@ -35,38 +37,35 @@
         ])
 
         /* parse from spec and use same brush */
-        const json = {
-            plot: [
-                {
-                    mark: 'line',
-                    data: {
-                        from: 'stocks',
-                        filterBy: '$brush',
-                    },
-                    x: 'Date',
-                    y: 'Close',
-                },
-                {
-                    mark: 'gridX',
-                },
-                {
-                    mark: 'gridY',
-                },
-            ]
-        }
-        spec = await vg.parseSpec(
-            json,
+        const ast = parseSpec(
             {
-                params: [
-                    ['brush', brush]
-                ]
+                plot: [
+                    {
+                        mark: 'line',
+                        data: {
+                            from: 'stocks',
+                            filterBy: '$brush',
+                        },
+                        x: 'Date',
+                        y: 'Close',
+                    },
+                    {
+                        mark: 'gridX',
+                    },
+                    {
+                        mark: 'gridY',
+                    },
+                ],
             }
         )
+        const params = new Map()
+        params.set('brush', brush)
+        element = (await astToDOM(ast, {params})).element
     }
 
     const ready = init()
 
-    let sqlText = "SELECT Symbol, Date, Open, Close, Volume\n FROM stocks\n ORDER BY date\n LIMIT 10"
+    let sqlText = 'SELECT Symbol, Date, Open, Close, Volume\n FROM stocks\n ORDER BY date\n LIMIT 10'
     let filterBy = true
     $: repaint = {filterBy, sqlText}
 </script>
@@ -82,7 +81,7 @@
             <Menu from="stocks" column="Symbol" value="AAPL" as={brush}/>
         </div>
         <Element style="grid-area: chart" el={chart}></Element>
-        <Element style="grid-area: spec; background: lightgray" el={spec}></Element>
+        <Element style="grid-area: spec; background: lightgray" el={element}></Element>
         <!--
                 <div style="grid-area: table">
                     <Table from="stocks" columns={['*']} limit={10} offset={0}

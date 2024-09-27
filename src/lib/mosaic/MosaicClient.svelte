@@ -95,7 +95,7 @@
             const {from, schema, distinct, orderBy, limit, offset} = this
             return Query
                 .from(from)
-                .select(schema.map(s => s.column))
+                .select(schema ? schema.map(s => s.column) : '*')
                 .distinct(distinct)
                 .where(filter)
                 .orderby(orderBy)

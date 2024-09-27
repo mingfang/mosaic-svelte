@@ -1,8 +1,9 @@
 <script>
     import * as vg from '@uwdata/vgplot'
+    import {parseSpec, astToDOM} from '@uwdata/mosaic-spec'
     import {Element} from '$lib'
 
-    let chart, table, menu, spec
+    let chart, table, menu, element
     let brush
 
     async function init() {
@@ -26,7 +27,8 @@
         ])
 
         /* parse from spec and use same brush */
-        const json = {
+        const ast = parseSpec(
+            {
             plot: [
                 {
                     mark: 'line',
@@ -43,16 +45,12 @@
                 {
                     mark: 'gridY',
                 },
-            ]
-        }
-        spec = await vg.parseSpec(
-            json,
-            {
-                params: [
-                    ['brush', brush]
-                ]
+                ],
             }
         )
+        const params = new Map()
+        params.set('brush', brush)
+        element = (await astToDOM(ast, {params})).element
 
         table = vg.table({from: "stocks", filterBy: brush, height: 250})
     }
@@ -68,7 +66,7 @@
     {:then _}
         <Element style="grid-area: menu" el={menu}></Element>
         <Element style="grid-area: chart" el={chart}></Element>
-        <Element style="grid-area: spec; background: lightgray" el={spec}></Element>
+        <Element style="grid-area: spec; background: lightgray" el={element}></Element>
         <Element style="grid-area: table; position: relative" el={table}></Element>
     {/await}
 </div>
